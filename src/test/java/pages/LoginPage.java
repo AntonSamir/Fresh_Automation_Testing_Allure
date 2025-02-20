@@ -1,24 +1,33 @@
 package pages;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
 import utility.BrowserDriver;
-
-import static org.junit.Assert.assertEquals;
 
 public class LoginPage extends BrowserDriver {
 
-    public static String password_text_id = "email";
-    public static String login_btn_id ="password";
-    public static String newregister_btn_xpath ="//*[@id=\"main\"]/div/section/div[1]/span/form/button";
+    public static String Username_Class = "//*[@id=\"app\"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[1]/div/div[2]/input";
+    public static String Password_xpath ="/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[2]/div/div[2]/input";
+    public static String Login_btn_xpath ="//*[@id=\"app\"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[3]/button";
 
-    public static void sendkeys_Email() throws InterruptedException {
-        driver.findElement(By.id(password_text_id)).sendKeys("antonsamy21@gmail.com");
+    public static void Navigate_Website() throws InterruptedException {
+
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://opensource-demo.orangehrmlive.com/");
+        Thread.sleep(5000);
     }
-    public static void sendkeys_password() throws InterruptedException {
-        driver.findElement(By.id(login_btn_id)).sendKeys("123456789POqw//");
+    public static void sendkeys_Username() {
+        driver.findElement(By.xpath(Username_Class)).sendKeys("Admin");
+    }
+    public static void sendkeys_password() {
+        driver.findElement(By.xpath(Password_xpath)).sendKeys("admin123");
     }
 
-    public static void click_NewRegister_btn() throws InterruptedException {
-        driver.findElement(By.xpath(newregister_btn_xpath)).click();
+    public static void click_login_btn() throws InterruptedException {
+        driver.findElement(By.xpath(Login_btn_xpath)).click();
+        Thread.sleep(1000);
     }
 }

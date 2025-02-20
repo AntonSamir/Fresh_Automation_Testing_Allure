@@ -69,7 +69,7 @@ public class AdminPage extends BrowserDriver {
         driver.findElement(By.xpath(Employee_Name)).click();
         driver.findElement(By.xpath(Add_Status_type)).click();
         driver.findElement(By.xpath(Enable_type)).click();
-        driver.findElement(By.xpath(Username)).sendKeys("Antlr");
+        driver.findElement(By.xpath(Username)).sendKeys("Antpr");
         driver.findElement(By.xpath(Password)).sendKeys("123456789QWpo//");
         driver.findElement(By.xpath(Confirm_Password)).sendKeys("123456789QWpo//");
         driver.findElement(By.xpath(Save_Btn)).click();
@@ -90,7 +90,7 @@ public class AdminPage extends BrowserDriver {
         lastKnownCount = newCount;
     }
     public static void Search_User() throws InterruptedException {
-        driver.findElement(By.xpath(Search_Username)).sendKeys("Antlr");
+        driver.findElement(By.xpath(Search_Username)).sendKeys("Antpr");
         driver.findElement(By.xpath(Add_User_type_Search)).click();
         Thread.sleep(200);
         driver.findElement(By.xpath(Admin_type_Search)).click();
@@ -103,23 +103,37 @@ public class AdminPage extends BrowserDriver {
         driver.findElement(By.xpath(Search_Btn)).click();
         Thread.sleep(2000);
     }
-    public static void Delete_User()  {
+    public static void Delete_User() throws InterruptedException {
         driver.findElement(By.xpath(Delete_Btn)).click();
         driver.findElement(By.xpath(Confirm_Delete_Btn)).click();
+        Thread.sleep(2000);
 
     }
-    public static void verify_Record_Count_Decrease() {
-        int newCount = get_Record_Count();
-        System.out.println("New Record Count: " + newCount);
+    public static void  verify_Record_Count_Decrease() {
 
-        if (newCount == initialCount + 1) {
-            System.out.println("✅ Test Passed: The number of records Decreased by 1.");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement recordCountElement = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath(Record_Count_xpath))
+        );
+        String recordText = recordCountElement.getText();
+        if (recordText.contains("No Records Found")) {
+            System.out.println("No Records Found – already deleted.");
+            lastKnownCount = 0;
         } else {
-            System.out.println("❌ Test Failed: Expected " + (initialCount + 1) + ", but got " + newCount);
-        }
+            String numericCount = recordText.replaceAll("[^0-9]", "");
+            int newCount = Integer.parseInt(numericCount);
+            System.out.println("New Record Count after deletion: " + newCount);
 
-        lastKnownCount = newCount;
+            if (newCount == lastKnownCount - 1) {
+                System.out.println("✅ Test Passed: The number of records decreased by 1.");
+            } else {
+                System.out.println("❌ Test Failed: Expected " + (lastKnownCount - 1) + ", but got " + newCount);
+            }
+
+            lastKnownCount = newCount;
+        }
     }
+
 }
 
 
